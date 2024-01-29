@@ -4,7 +4,7 @@ import Chat from './Chat';
 
 const App = () => {
   // Get the URL dynamically from the Vercel environment or any other means
-  const chatUrl = 'your-vercel-deployment-url';
+  const chatUrl = 'https://vercel.com/askanszs-projects/chat-gpt/4u7FwKMQCN3qtGHk5EydgRinU13j';
 
   return (
     <div>
