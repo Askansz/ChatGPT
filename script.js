@@ -1,4 +1,4 @@
-const socket = new WebSocket('wss://your-vercel-app.vercel.app'); // Replace with your Vercel app URL
+const socket = new WebSocket('https://vercel.com/askanszs-projects/chat-gpt/CkbdAeJN18QCdc9nyeUwKm3UtYvf'); // Replace with your Vercel app URL
 
 socket.addEventListener('open', (event) => {
     console.log('Connected to the server');
