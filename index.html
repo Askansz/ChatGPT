@@ -62,59 +62,63 @@
     </div>
   </div>
 
-  <script>
-    // JavaScript code for interacting with the Chat component
-    const chatMessages = document.getElementById('chatMessages');
-    const messageInput = document.getElementById('messageInput');
-    const sendMessageButton = document.getElementById('sendMessageButton');
+<script>
+  // JavaScript code for interacting with the Chat component
+  const chatMessages = document.getElementById('chatMessages');
+  const messageInput = document.getElementById('messageInput');
+  const sendMessageButton = document.getElementById('sendMessageButton');
+  const chatUrl = 'your-vercel-deployment-url'; // Replace with your Vercel deployment URL
 
-    // Function to add a message to the chat
-    const addMessage = (message, sender) => {
-      const messageElement = document.createElement('div');
-      messageElement.classList.add('message');
-      messageElement.innerHTML = `<strong>${sender}:</strong> ${message}`;
-      chatMessages.appendChild(messageElement);
-      // Scroll to the bottom to show the latest message
-      chatMessages.scrollTop = chatMessages.scrollHeight;
-    };
+  // Function to add a message to the chat
+  const addMessage = (message, sender) => {
+    const messageElement = document.createElement('div');
+    messageElement.classList.add('message');
+    messageElement.innerHTML = `<strong>${sender}:</strong> ${message}`;
+    chatMessages.appendChild(messageElement);
+    // Scroll to the bottom to show the latest message
+    chatMessages.scrollTop = chatMessages.scrollHeight;
+  };
 
-    // Function to send a message
-    const sendMessage = async () => {
-      const message = messageInput.value.trim();
-      if (message !== '') {
-        // Use Vercel serverless function to send message
-        const response = await fetch(`/.netlify/functions/sendMessage?url=${chatUrl}`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ message }),
-        });
+  // Function to send a message
+  const sendMessage = async () => {
+    const message = messageInput.value.trim();
+    if (message !== '') {
+      // Use Vercel serverless function to send message
+      const response = await fetch(`/.netlify/functions/sendMessage?url=${chatUrl}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ message }),
+      });
 
-        const result = await response.json();
-
-        if (result.success) {
-          addMessage(message, 'You');
-          messageInput.value = ''; // Clear the input field
-        }
-      }
-    };
-
-    // Event listener for the send button
-    sendMessageButton.addEventListener('click', sendMessage);
-
-    // Function to fetch and display existing messages
-    const fetchMessages = async () => {
-      const response = await fetch(`/.netlify/functions/getMessages?url=${chatUrl}`);
       const result = await response.json();
 
       if (result.success) {
-        result.messages.forEach(({ text, sender }) => addMessage(text, sender));
+        addMessage(message, 'You');
+        messageInput.value = ''; // Clear the input field
       }
-    };
+    }
+  };
 
-    // Fetch messages when the page loads
-    fetchMessages();
+  // Event listener for the send button
+  sendMessageButton.addEventListener('click', sendMessage);
+
+  // Function to fetch and display existing messages
+  const fetchMessages = async () => {
+    const response = await fetch(`/.netlify/functions/getMessages?url=${chatUrl}`);
+    const result = await response.json();
+
+    if (result.success) {
+      result.messages.forEach(({ text, sender }) => addMessage(text, sender));
+    }
+  };
+
+  // Fetch messages periodically (you can adjust the interval as needed)
+  setInterval(fetchMessages, 3000); // Fetch messages every 3 seconds
+
+  // Fetch messages when the page loads
+  fetchMessages()
   </script>
 </body>
 </html>
